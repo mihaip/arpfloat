@@ -1,8 +1,8 @@
 //! This file contains simple helper functions and test helpers.
 
 /// Returns a mask full of 1s, of `b` bits.
-pub fn mask(b: usize) -> usize {
-    (1 << (b)) - 1
+pub fn mask(b: usize) -> u64 {
+    (1u64 << (b)) - 1
 }
 
 #[test]
@@ -10,6 +10,8 @@ fn test_masking() {
     assert_eq!(mask(0), 0x0);
     assert_eq!(mask(1), 0x1);
     assert_eq!(mask(8), 255);
+    assert_eq!(mask(32), 0x0000_0000_ffff_ffffu64);
+    assert_eq!(mask(52), 0x000f_ffff_ffff_ffffu64);
 }
 
 #[cfg(feature = "std")]

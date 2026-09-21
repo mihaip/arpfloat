@@ -160,13 +160,12 @@ impl Float {
     fn from_bits(sem: Semantics, float: u64) -> Self {
         // Extract the biased exponent (wipe the sign and mantissa).
         let biased_exp = ((float >> sem.get_mantissa_len())
-            & mask(sem.get_exponent_len()) as u64)
-            as i64;
+            & mask(sem.get_exponent_len())) as i64;
         // Wipe the original exponent and mantissa.
         let sign =
             (float >> (sem.get_exponent_len() + sem.get_mantissa_len())) & 1;
         // Wipe the sign and exponent.
-        let mut mantissa = float & mask(sem.get_mantissa_len()) as u64;
+        let mut mantissa = float & mask(sem.get_mantissa_len());
 
         let sign = sign == 1;
 
@@ -232,11 +231,11 @@ impl Float {
         match self.get_category() {
             Category::Infinity => {
                 mantissa = 0;
-                exp = mask(self.get_exponent_len()) as u64;
+                exp = mask(self.get_exponent_len());
             }
             Category::NaN => {
                 mantissa = 1 << (self.get_mantissa_len() - 1);
-                exp = mask(self.get_exponent_len()) as u64;
+                exp = mask(self.get_exponent_len());
             }
             Category::Zero => {
                 mantissa = 0;
@@ -252,7 +251,7 @@ impl Float {
                 if (exp == 1) && ((m >> self.get_mantissa_len()) == 0) {
                     exp = 0;
                 }
-                mantissa = m & utils::mask(self.get_mantissa_len()) as u64;
+                mantissa = m & utils::mask(self.get_mantissa_len());
             }
         }
 
@@ -444,7 +443,7 @@ fn test_cast_zero_nan_inf() {
     }
 
     {
-        let a = Float::from_f64(f64::from_bits((mask(32) << 32) as u64));
+        let a = Float::from_f64(f64::from_bits(mask(32) << 32));
         assert!(!a.is_inf());
         assert!(a.is_nan());
     }
